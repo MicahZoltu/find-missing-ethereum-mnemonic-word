@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset='utf-8'>
+	<link rel='stylesheet' href='./css/index.css'>
+</head>
+<body style='margin: 0;'>
+	<script type='importmap'>
+		{
+			"imports": {
+				"preact": "./vendor/preact/preact.module.js",
+				"preact/jsx-runtime": "./vendor/preact/jsx-runtime/jsxRuntime.module.js",
+				"preact/hooks": "./vendor/preact/hooks/hooks.module.js",
+				"@preact/signals": "./vendor/@preact/signals/signals.module.js",
+				"@preact/signals-core": "./vendor/@preact/signals-core/signals-core.module.js"
+			}
+		}
+	</script>
+
+	<main>Loading...</main>
+
+	<!-- a workaround for bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1803984 -->
+	<script async type='module'>import './js/index.js'</script>
+</body>

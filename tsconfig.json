@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ES2022",
+		"moduleResolution": "node16",
+		"rootDir": "app/ts",
+		"outDir": "app/js",
+		"sourceMap": true,
+		"inlineSources": true,
+		"declaration": true,
+		"declarationMap": true,
+
+		"strict": true,
+		"allowUnusedLabels": false,
+		"allowUnreachableCode": false,
+		"exactOptionalPropertyTypes": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact",
+		"lib": ["ES2022", "DOM"],
+		"typeRoots": [ "./node_modules/@types" ],
+		// add any @types here, empty array instead of default to prevent @types/node from being picked up
+		"types": [],
+	},
+	"include": [
+		"./app/ts/**/*.ts",
+		"./app/ts/**/*.tsx",
+	],
+}
