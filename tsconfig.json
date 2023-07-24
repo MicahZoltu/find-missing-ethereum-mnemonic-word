@@ -13,7 +13,8 @@
 		"strict": true,
 		"allowUnusedLabels": false,
 		"allowUnreachableCode": false,
-		"exactOptionalPropertyTypes": true,
+		// this project frequently treats missing and undefined properties the same and the code is much simpler with this off
+		"exactOptionalPropertyTypes": false,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
@@ -24,7 +25,7 @@
 
 		"jsx": "react-jsx",
 		"jsxImportSource": "preact",
-		"lib": ["ES2022", "DOM"],
+		"lib": ["ES2023", "DOM"],
 		"typeRoots": [ "./node_modules/@types" ],
 		// add any @types here, empty array instead of default to prevent @types/node from being picked up
 		"types": [],

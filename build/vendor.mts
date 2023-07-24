@@ -8,12 +8,20 @@ const VENDOR_OUTPUT_PATH = path.join(directoryOfThisFile, '..', 'app', 'vendor')
 const MODULES_ROOT_PATH = path.join(directoryOfThisFile, '..', 'node_modules')
 const INDEX_HTML_PATH = path.join(directoryOfThisFile, '..', 'app', 'index.html')
 
-const dependencyPaths: { packageName: string, packageToVendor?: string, subfolderToVendor: string, entrypointFile: string }[] = [
-	{ packageName: 'preact', subfolderToVendor: 'dist', entrypointFile: 'preact.module.js' },
-	{ packageName: 'preact/jsx-runtime', subfolderToVendor: 'dist', entrypointFile: 'jsxRuntime.module.js' },
-	{ packageName: 'preact/hooks', subfolderToVendor: 'dist', entrypointFile: 'hooks.module.js' },
-	{ packageName: '@preact/signals', subfolderToVendor: 'dist', entrypointFile: 'signals.module.js' },
-	{ packageName: '@preact/signals-core', subfolderToVendor: 'dist', entrypointFile: 'signals-core.module.js' },
+type Dependency = { packageName: string, packageToVendor?: string, subfolderToVendor: string, mainEntrypointFile: string, alternateEntrypoints: Record<string, string> }
+const dependencyPaths: Dependency[] = [
+	{ packageName: 'preact', subfolderToVendor: 'dist', mainEntrypointFile: 'preact.module.js', alternateEntrypoints: {} },
+	{ packageName: 'preact/jsx-runtime', subfolderToVendor: 'dist', mainEntrypointFile: 'jsxRuntime.module.js', alternateEntrypoints: {} },
+	{ packageName: 'preact/hooks', subfolderToVendor: 'dist', mainEntrypointFile: 'hooks.module.js', alternateEntrypoints: {} },
+	{ packageName: 'preact/debug', subfolderToVendor: 'dist', mainEntrypointFile: 'debug.module.js', alternateEntrypoints: {} },
+	{ packageName: 'preact/devtools', subfolderToVendor: 'dist', mainEntrypointFile: 'devtools.module.js', alternateEntrypoints: {} },
+	{ packageName: '@preact/signals', subfolderToVendor: 'dist', mainEntrypointFile: 'signals.module.js', alternateEntrypoints: {} },
+	{ packageName: '@preact/signals-core', subfolderToVendor: 'dist', mainEntrypointFile: 'signals-core.module.js', alternateEntrypoints: {} },
+	{ packageName: '@noble/hashes', subfolderToVendor: 'esm', mainEntrypointFile: 'index.js', alternateEntrypoints: { 'crypto': 'crypto.js', 'sha3': 'sha3.js', 'utils': 'utils.js', '_assert': '_assert.js', 'sha256': 'sha256.js', 'sha512': 'sha512.js', 'pbkdf2': 'pbkdf2.js', 'hmac': 'hmac.js', 'ripemd160': 'ripemd160.js' } },
+	{ packageName: '@noble/curves', subfolderToVendor: 'esm', mainEntrypointFile: 'index.js', alternateEntrypoints: { 'secp256k1': 'secp256k1.js', 'abstract/modular': 'abstract/modular.js' } },
+	{ packageName: '@scure/base', subfolderToVendor: 'lib/esm', mainEntrypointFile: 'index.js', alternateEntrypoints: {} },
+	{ packageName: '@zoltu/bip39', subfolderToVendor: 'output', mainEntrypointFile: 'index.js', alternateEntrypoints: { 'wordlists/english.js': 'wordlists/english.js' } },
+	{ packageName: '@scure/bip32', subfolderToVendor: 'lib/esm', mainEntrypointFile: 'index.js', alternateEntrypoints: {} },
 ]
 
 async function vendorDependencies() {
@@ -34,10 +42,12 @@ async function vendorDependencies() {
 		await recursiveDirectoryCopy(sourceDirectoryPath, destinationDirectoryPath, inclusionPredicate, rewriteSourceMapSourcePath.bind(undefined, packageName))
 	}
 
-	
 	const oldIndexHtml = await fs.readFile(INDEX_HTML_PATH, 'utf8')
-	const importmap = dependencyPaths.reduce((importmap, { packageName, packageToVendor, entrypointFile }) => {
-		importmap.imports[packageName] = `./vendor/${packageToVendor || packageName}/${entrypointFile}`
+	const importmap = dependencyPaths.reduce((importmap, { packageName, mainEntrypointFile, alternateEntrypoints }) => {
+		importmap.imports[packageName] = `./vendor/${packageName}/${mainEntrypointFile}`
+		for (const [alternateEntrypointName, alternateEntrypointFile] of Object.entries(alternateEntrypoints)) {
+			importmap.imports[`${packageName}/${alternateEntrypointName}`] = `./vendor/${packageName}/${alternateEntrypointFile}`
+		}
 		return importmap
 	}, { imports: {} as Record<string, string> })
 	const importmapJson = JSON.stringify(importmap, undefined, '\t')

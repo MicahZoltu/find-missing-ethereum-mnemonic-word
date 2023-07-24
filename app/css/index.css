@@ -1,5 +1,53 @@
+*,
+*::before,
+*::after { 
+	box-sizing: border-box;
+}
+body {
+	display: flex;
+	flex-direction: column;
+	/* while centering looks nicer, since everything is sized responsively based on need it is better to have things extend/contract only on the right */
+	align-items: flex-start;
+}
+div {
+	display: flex;
+}
+span,
+label {
+	display: inline-flex;
+}
+div, label, span {
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25em;
+}
+
 main {
+	display: grid;
+	width: fit-content;
 	margin: 10px;
+}
+code {
+	/* so double/tripple clicking will select the contents without extra spaces */
+	display: inline-block;
+}
+
+.spacer {
+	flex-grow: 1;
+}
+.widget {
+	flex-direction: column;
+	align-content: flex-start;
+	align-items: flex-start;
+	justify-content: center;
+	margin: 5px;
+	padding: 5px;
+	border: 1px solid black;
+	/* tall enough to fit a button */
+	min-height: calc(1em + 17px);
+}
+.widget > div {
+	width: 100%;
 }
 
 /** Spinner **/
